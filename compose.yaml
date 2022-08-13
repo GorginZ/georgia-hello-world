@@ -1,0 +1,17 @@
+---
+version: '3.4'
+services:
+  base:
+    &base
+    volumes:
+      - .:/go/src/github.com/GorginZ/basic-app
+    working_dir: /go/src/github.com/GorginZ/basic-app
+    build:
+      context: .
+      target: ci
+
+  lint:
+    <<: *base
+    entrypoint: golangci-lint
+    environment:
+      CGO_ENABLED: 0
