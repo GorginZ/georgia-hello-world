@@ -38,11 +38,3 @@ jobs:
     - name: build_and_publish
       run: |
         ./bin/build_and_publish.sh
-
-
-
-
-
-
-
-
