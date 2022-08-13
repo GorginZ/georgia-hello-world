@@ -92,6 +92,7 @@ func Test_StatusBody(t *testing.T) {
 			// overide our baked in values
 			Version = "1.0"
 			Sha = "abc53458585"
+			Description = "text"
 
 			handleStatus(&tt.w, tt.request)
 			response := tt.w.Result()

@@ -12,7 +12,9 @@ RUN go test ./... -v
 
 ARG version
 ARG sha
-RUN CGO_ENABLED=0 go build -v -o /_build/basic-app -ldflags "-X 'main.Version=${version}' -X 'main.Sha=${sha}'"
+ARG description
+
+RUN CGO_ENABLED=0 go build -v -o /_build/basic-app -ldflags "-X 'main.Version=${version}' -X 'main.Sha=${sha}' -X 'main.Description=${description}'"
 
 FROM scratch
 COPY --from=builder /_build/basic-app /app

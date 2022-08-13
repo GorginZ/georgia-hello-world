@@ -10,6 +10,7 @@ import (
 
 var Version = "development"
 var Sha = "default"
+var Description = "default"
 
 type AppData struct {
 	Metadata Metadata `json:"my-application"`
@@ -32,7 +33,7 @@ func getSha() string {
 	return Sha
 }
 func getDesc() string {
-	return "text"
+	return Description
 }
 
 func router() {
@@ -48,7 +49,8 @@ func router() {
 		Addr: fmt.Sprintf(":%s", listen_port),
 	}
 	log.Printf("Version: %s", Version)
-	log.Printf("Version: %s", Sha)
+	log.Printf("Sha: %s", Sha)
+	log.Printf("Description: %s", Description)
 
 	log.Fatal(srv.ListenAndServe())
 }
