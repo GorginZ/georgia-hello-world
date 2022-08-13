@@ -89,6 +89,9 @@ func Test_StatusBody(t *testing.T) {
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
+			// overide version. just care about shape
+			Version = "1.0"
+
 			handleStatus(&tt.w, tt.request)
 			response := tt.w.Result()
 			response.Body.Close()
