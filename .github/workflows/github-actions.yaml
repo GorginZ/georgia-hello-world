@@ -20,6 +20,25 @@ jobs:
       run: |
         ./bin/build.sh
 
+  build-and-publish:
+    needs: [validate-lint-test-and-build]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: login-to-ghcr
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        token: ${{ secrets.GHCR_GITHUB_TOKEN }}
+
+    - name: build_and_publish
+      run: |
+        ./bin/build_and_publish.sh
+
+
+
 
 
 
