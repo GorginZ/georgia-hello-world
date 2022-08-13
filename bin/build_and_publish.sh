@@ -8,13 +8,12 @@ if [[ "$#" != 1 ]]; then
   exit 245
 fi
 
-hash yq || die "yq not found"
-
 env=$1
 
 commit=$(git describe --tags --always)
 version=$(cat VERSION)
-description=$(yq '.description' env/$env.yaml)
+description=$(docker compose run -i --rm yq --cmd'.description' env/$env.yaml) 
+echo $description
 
 docker build --build-arg version="$version" --build-arg sha="$commit" --build-arg description="$description" -t "ghcr.io/gorginz/georgia-hello-world:$commit" .
 

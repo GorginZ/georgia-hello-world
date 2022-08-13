@@ -1,5 +1,7 @@
 FROM golang:1.18-alpine as ci
 RUN wget -O- -nv https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.46.2
+RUN  wget https://github.com/mikefarah/yq/releases/download/v4.27.2/yq_linux_amd64.tar.gz -O - |\
+    tar xz && mv yq_linux_amd64 /usr/bin/yq
 
 FROM golang:1.18-alpine as builder
 WORKDIR /go/src/github.com/GorginZ/basic-app
