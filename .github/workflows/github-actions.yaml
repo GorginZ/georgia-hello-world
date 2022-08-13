@@ -22,6 +22,7 @@ jobs:
 
   build-and-publish:
     needs: [validate-lint-test-and-build]
+    # is there a nicer way to only do main? I don't like the publish step showing up on th branch build
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
