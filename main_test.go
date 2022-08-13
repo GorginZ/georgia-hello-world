@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 )
 
@@ -83,29 +84,25 @@ func Test_StatusBody(t *testing.T) {
 		w          httptest.ResponseRecorder
 	}{
 		"happyHitRoot": {
-			request: httptest.NewRequest("GET", "/status", nil),
-			wantBody: `{
-				"my-application": [
-					{
-						"version": "1.0",
-						"description": "text",
-						"sha": "abc53458585"
-					}
-				]
-			}`,
-			w: *httptest.NewRecorder(),
+			request:  httptest.NewRequest("GET", "/status", nil),
+			wantBody: `{"my-application":{"version":"1.0","description":"text","sha":"abc53458585"}}\n`,
+			w:        *httptest.NewRecorder(),
 		},
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			handleRoot(&tt.w, tt.request)
+			handleStatus(&tt.w, tt.request)
 			response := tt.w.Result()
 			response.Body.Close()
 			body, err := ioutil.ReadAll(response.Body)
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			if string(body) != string(tt.wantBody) {
+
+			// this is awful, but the literal in want is being escaped, so I need to put the newline as intended
+			want := strings.Replace(tt.wantBody, `\n`, "\n", -1)
+
+			if string(body) != string(want) {
 				t.Errorf("got %q, want %q", string(body), tt.wantBody)
 			}
 
