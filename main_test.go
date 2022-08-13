@@ -14,22 +14,22 @@ func Test_RootStatus(t *testing.T) {
 		request  *http.Request
 		w        httptest.ResponseRecorder
 	}{
-		"getRootShouldReturn200": {
+		"get-root-should-return-200": {
 			wantCode: 200,
 			request:  httptest.NewRequest("GET", "/", nil),
 			w:        *httptest.NewRecorder(),
 		},
-		"denyPOST": {
+		"should-deny-POST": {
 			wantCode: 405,
 			request:  httptest.NewRequest("POST", "/", nil),
 			w:        *httptest.NewRecorder(),
 		},
-		"denyDELETE": {
+		"should-deny-DELETE": {
 			wantCode: 405,
 			request:  httptest.NewRequest("DELETE", "/", nil),
 			w:        *httptest.NewRecorder(),
 		},
-		"denyPUT": {
+		"should-deny-PUT": {
 			wantCode: 405,
 			request:  httptest.NewRequest("PUT", "/", nil),
 			w:        *httptest.NewRecorder(),
@@ -48,14 +48,13 @@ func Test_RootStatus(t *testing.T) {
 
 func Test_RootBody(t *testing.T) {
 	tests := map[string]struct {
-		wantStatus string
-		wantBody   string
-		request    *http.Request
-		w          httptest.ResponseRecorder
+		wantBody string
+		request  *http.Request
+		w        httptest.ResponseRecorder
 	}{
-		"happyHitRoot": {
-			request:  httptest.NewRequest("GET", "/", nil),
+		"happy-hit-root-should-be-valid-json": {
 			wantBody: `{"message":"Hello World!"}`,
+			request:  httptest.NewRequest("GET", "/", nil),
 			w:        *httptest.NewRecorder(),
 		},
 	}
@@ -64,6 +63,7 @@ func Test_RootBody(t *testing.T) {
 			handleRoot(&tt.w, tt.request)
 			response := tt.w.Result()
 			response.Body.Close()
+
 			body, err := ioutil.ReadAll(response.Body)
 			if err != nil {
 				t.Errorf(err.Error())
@@ -71,21 +71,19 @@ func Test_RootBody(t *testing.T) {
 			if string(body) != string(tt.wantBody) {
 				t.Errorf("got %q, want %q", string(body), tt.wantBody)
 			}
-
 		})
 	}
 }
 
 func Test_StatusBody(t *testing.T) {
 	tests := map[string]struct {
-		wantStatus string
-		wantBody   string
-		request    *http.Request
-		w          httptest.ResponseRecorder
+		wantBody string
+		request  *http.Request
+		w        httptest.ResponseRecorder
 	}{
-		"happyHitRoot": {
-			request:  httptest.NewRequest("GET", "/status", nil),
+		"status-should-be-valid-json": {
 			wantBody: `{"my-application":{"version":"1.0","description":"text","sha":"abc53458585"}}\n`,
+			request:  httptest.NewRequest("GET", "/status", nil),
 			w:        *httptest.NewRecorder(),
 		},
 	}
@@ -94,18 +92,17 @@ func Test_StatusBody(t *testing.T) {
 			handleStatus(&tt.w, tt.request)
 			response := tt.w.Result()
 			response.Body.Close()
+
 			body, err := ioutil.ReadAll(response.Body)
 			if err != nil {
 				t.Errorf(err.Error())
 			}
 
-			// this is awful, but the literal in want is being escaped, so I need to put the newline as intended
+			// this is awful, but the \n in the literal is being escaped, so I need to put the newline 'back'
 			want := strings.Replace(tt.wantBody, `\n`, "\n", -1)
-
 			if string(body) != string(want) {
 				t.Errorf("got %q, want %q", string(body), tt.wantBody)
 			}
-
 		})
 	}
 }
