@@ -8,13 +8,34 @@ import (
 	"os"
 )
 
+type AppData struct {
+	Metadata Metadata `json:"my-application"`
+}
+
+type Metadata struct {
+	Version     string `json:"version"`
+	Description string `json:"description"`
+	Sha         string `json:"sha"`
+}
+
 func main() {
 	router()
+}
+
+func getVersion() string {
+	return "1.0"
+}
+func getSha() string {
+	return "abc53458585"
+}
+func getDesc() string {
+	return "text"
 }
 
 func router() {
 	// currently is returning root for all other paths
 	http.HandleFunc("/", handleRoot)
+	http.HandleFunc("/status", handleStatus)
 
 	listen_port, found := os.LookupEnv("HTTP_PORT")
 	if !found {
@@ -40,4 +61,16 @@ func handleRoot(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("JSON marshal Error. Err: %s", err)
 	}
 	w.Write(json)
+}
+
+func handleStatus(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	version := getVersion()
+	description := getDesc()
+	sha := getSha()
+
+	meta := Metadata{Version: version, Description: description, Sha: sha}
+	appData := AppData{Metadata: meta}
+	json.NewEncoder(w).Encode(appData)
+	w.WriteHeader(200)
 }
