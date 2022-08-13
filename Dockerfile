@@ -19,4 +19,3 @@ FROM scratch
 COPY --from=builder /_build/basic-app /app
 
 ENTRYPOINT ["/app"]
-
