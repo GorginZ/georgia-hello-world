@@ -31,5 +31,6 @@ jobs:
         password: ${{ secrets.GHCR_GITHUB_TOKEN }}
 
     - name: build_and_publish
+      uses: mikefarah/yq@v4.27.2
       run: |
-        ./bin/build_and_publish.sh
+        ./bin/build_and_publish.sh dev
