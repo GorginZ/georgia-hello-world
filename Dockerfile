@@ -11,8 +11,13 @@ RUN go mod tidy
 ENV CGO_ENABLED=0
 RUN go test ./... -v
 
-RUN CGO_ENABLED=0 go build -o /_build/basic-app
+ARG version
+RUN CGO_ENABLED=0 go build -v -o /_build/basic-app -ldflags "-X main.Version=${version}"
 
 FROM scratch
 COPY --from=builder /_build/basic-app /app
+# ARG commit_sha="123456" 
+# ENV COMMIT_SHA=$commit_sha 
+
 ENTRYPOINT ["/app"]
+
