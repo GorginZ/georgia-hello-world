@@ -10,6 +10,12 @@ services:
       context: .
       target: ci
 
+  go:
+    <<: *base
+    entrypoint: go
+    environment:
+      CGO_ENABLED: 0
+
   lint:
     <<: *base
     entrypoint: golangci-lint

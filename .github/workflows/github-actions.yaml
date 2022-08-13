@@ -12,6 +12,11 @@ jobs:
       run: |
         ./bin/lint.sh
 
+    - name: test
+      run: |
+        ./bin/lint.sh
+
+
 
 
 
