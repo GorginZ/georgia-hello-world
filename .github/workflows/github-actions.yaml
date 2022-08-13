@@ -18,7 +18,7 @@ jobs:
 
     - name: validate_build
       run: |
-        ./bin/build.sh
+        ./bin/test_build.sh
 
   build-and-publish:
     needs: [validate-lint-test-and-build]
