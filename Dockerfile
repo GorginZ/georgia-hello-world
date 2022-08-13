@@ -7,17 +7,15 @@ COPY . /go/src/github.com/GorginZ/basic-app
 
 RUN go mod download
 RUN go mod tidy
-
 ENV CGO_ENABLED=0
 RUN go test ./... -v
 
 ARG version
-RUN CGO_ENABLED=0 go build -v -o /_build/basic-app -ldflags "-X main.Version=${version}"
+ARG sha
+RUN CGO_ENABLED=0 go build -v -o /_build/basic-app -ldflags "-X 'main.Version=${version}' -X 'main.Sha=${sha}'"
 
 FROM scratch
 COPY --from=builder /_build/basic-app /app
-# ARG commit_sha="123456" 
-# ENV COMMIT_SHA=$commit_sha 
 
 ENTRYPOINT ["/app"]
 
