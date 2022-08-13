@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -40,6 +41,36 @@ func Test_RootStatus(t *testing.T) {
 			if response.StatusCode != tt.wantCode {
 				t.Errorf("got %v, want %v", response.Status, tt.wantCode)
 			}
+		})
+	}
+}
+
+func Test_RootBody(t *testing.T) {
+	tests := map[string]struct {
+		wantStatus string
+		wantBody   string
+		request    *http.Request
+		w          httptest.ResponseRecorder
+	}{
+		"happyHitRoot": {
+			request:  httptest.NewRequest("GET", "/", nil),
+			wantBody: `{"message":"Hello World!"}`,
+			w:        *httptest.NewRecorder(),
+		},
+	}
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			handleRoot(&tt.w, tt.request)
+			response := tt.w.Result()
+			response.Body.Close()
+			body, err := ioutil.ReadAll(response.Body)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			if string(body) != string(tt.wantBody) {
+				t.Errorf("got %q, want %q", string(body), tt.wantBody)
+			}
+
 		})
 	}
 }
