@@ -16,10 +16,6 @@ jobs:
       run: |
         ./bin/test.sh
 
-    - name: validate_build
-      run: |
-        ./bin/test_build.sh
-
   build-and-publish:
     needs: [validate-lint-test-and-build]
     # is there a nicer way to only do main? I don't like the publish step showing up on th branch build
