@@ -26,5 +26,9 @@ func router() {
 
 func handleRoot(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-
+	if r.Method != "GET" {
+		w.WriteHeader(405)
+		return
+	}
+	w.WriteHeader(200)
 }

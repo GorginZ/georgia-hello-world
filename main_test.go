@@ -22,6 +22,16 @@ func Test_RootStatus(t *testing.T) {
 			request:  httptest.NewRequest("POST", "/", nil),
 			w:        *httptest.NewRecorder(),
 		},
+		"denyDELETE": {
+			wantCode: 405,
+			request:  httptest.NewRequest("DELETE", "/", nil),
+			w:        *httptest.NewRecorder(),
+		},
+		"denyPUT": {
+			wantCode: 405,
+			request:  httptest.NewRequest("PUT", "/", nil),
+			w:        *httptest.NewRecorder(),
+		},
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
