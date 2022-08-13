@@ -74,3 +74,41 @@ func Test_RootBody(t *testing.T) {
 		})
 	}
 }
+
+func Test_StatusBody(t *testing.T) {
+	tests := map[string]struct {
+		wantStatus string
+		wantBody   string
+		request    *http.Request
+		w          httptest.ResponseRecorder
+	}{
+		"happyHitRoot": {
+			request: httptest.NewRequest("GET", "/status", nil),
+			wantBody: `{
+				"my-application": [
+					{
+						"version": "1.0",
+						"description": "text",
+						"sha": "abc53458585"
+					}
+				]
+			}`,
+			w: *httptest.NewRecorder(),
+		},
+	}
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			handleRoot(&tt.w, tt.request)
+			response := tt.w.Result()
+			response.Body.Close()
+			body, err := ioutil.ReadAll(response.Body)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			if string(body) != string(tt.wantBody) {
+				t.Errorf("got %q, want %q", string(body), tt.wantBody)
+			}
+
+		})
+	}
+}
