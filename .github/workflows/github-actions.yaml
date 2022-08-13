@@ -1,7 +1,7 @@
 name: georgia-hello-world-pipeline
 on: [push]
 jobs:
-  test:
+  validate-lint-test-and-build:
     runs-on: ubuntu-latest
     steps:
 
@@ -15,6 +15,10 @@ jobs:
     - name: test
       run: |
         ./bin/test.sh
+
+    - name: validate_build
+      run: |
+        ./bin/build.sh
 
 
 
