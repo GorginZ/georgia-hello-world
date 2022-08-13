@@ -14,12 +14,7 @@ env=$1
 
 commit=$(git describe --tags --always)
 version=$(cat VERSION)
-description=$(docker compose run -i --rm yq '.description' envs/$env.yaml)
-
-wait
-
-echo $description
-echo "works on my machine!"
+description=$(cat envs/$env-description.txt
 
 docker build --build-arg version="$version" --build-arg sha="$commit" --build-arg description="$description" -t "ghcr.io/gorginz/georgia-hello-world:$commit" .
 
