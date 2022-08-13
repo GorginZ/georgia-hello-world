@@ -4,6 +4,7 @@ jobs:
   validate-lint-test-and-build:
     runs-on: ubuntu-latest
     steps:
+    # TODOthese can run concurrently
 
     - name: Checkout
       uses: actions/checkout@v2
@@ -31,7 +32,7 @@ jobs:
       with:
         registry: ghcr.io
         username: ${{ github.repository_owner }}
-        token: ${{ secrets.GHCR_GITHUB_TOKEN }}
+        password: ${{ secrets.GHCR_GITHUB_TOKEN }}
 
     - name: build_and_publish
       run: |
