@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -12,6 +13,7 @@ func main() {
 }
 
 func router() {
+	// currently is returning root for all other paths
 	http.HandleFunc("/", handleRoot)
 
 	listen_port, found := os.LookupEnv("HTTP_PORT")
@@ -31,4 +33,11 @@ func handleRoot(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(200)
+	resp := make(map[string]string)
+	resp["message"] = "Hello World!"
+	json, err := json.Marshal(resp)
+	if err != nil {
+		log.Fatalf("JSON marshal Error. Err: %s", err)
+	}
+	w.Write(json)
 }
