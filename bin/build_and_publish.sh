@@ -18,4 +18,4 @@ description=$(cat envs/$env-description.txt)
 
 docker build --build-arg version="$version" --build-arg sha="$commit" --build-arg description="$description" -t "ghcr.io/gorginz/georgia-hello-world:$commit" .
 
-# docker push "ghcr.io/gorginz/georgia-hello-world:$commit"
+docker push "ghcr.io/gorginz/georgia-hello-world:$commit"
