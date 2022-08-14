@@ -48,10 +48,10 @@ run:
 - merge PR into main
 - tag main with release version:
 
-```git tag vx.x.x```
+```git tag x.x.x```
 - push tag:
 
-```git push origin vx.x.x```
+```git push origin x.x.x```
 
 - create a release. Can do this in github UI.
 - select latest tag -> pipeline will build and push image to ghcr
