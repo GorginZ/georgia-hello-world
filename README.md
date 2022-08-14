@@ -94,16 +94,17 @@ I am not a go programmer, so while there are issues I am aware of there are like
 One thing I'm not enthusiastic about is I have included the [gorrila/mux](https://github.com/gorilla/mux) pkg because I wanted a quick way to enforce what methods are allowed at the 'top' routing level. I notice they are looking for a new maintainer and think it's generally best not to rely on external tools for simple things like this, and I'm not sure it gives me a lot, but this was faster for me because I'm not a go-wiz.
 
 ### testing
- I like to rely and feel confident in unit tests and have written some basic ones for the handlers. I did spend a little more time than I'd hoped wrestling with httptest because I haven't used it before. The /status tests are a bit janky.  
+ I like to rely and feel confident in unit tests and have written some basic ones for the handlers. I did spend a little more time than I'd hoped wrestling with ```httptest.recorder``` and some unexpected 200s. In particular the /status tests are a bit janky because the json encoder appends a newline but my string literal in the test's newline is being escaped.  
+ I used a struct for representing the metadata because the original map was not in the order I wanted - my tests alerted me to this, so they've paid themselves off somewhat. 
 
 The top level routing behaviour is untested It could be nice to throw in some postman tests in a compose to run in CI
 
 ### risks
 
-- haven't included any scanning tools in the pipeline, could use something like sonarcube, similarly the same can be said regarding image security.
+- haven't included any code scanning tools in the pipeline, could use something like sonarcube, similarly the same can be said regarding image security.
 - no branch protection for main
 
-- currently gh actions is using a PAK (*only* scoped to packages - still bad though). This is not reccomended I will migrate to deploy keys. I wasn't aware until I read this: [gh actions security](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#considering-cross-repository-access)
+- currently gh actions is using a PAK (*only* scoped to packages - still bad though). This is very, very, very not reccomended! I will migrate to deploy keys. I wasn't aware until I read this: [gh actions security](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#considering-cross-repository-access)
 
 ### assumptions
 
