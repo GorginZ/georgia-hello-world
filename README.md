@@ -1,6 +1,7 @@
 # GEORGIA-HELLO-WORLD
 
-main ![build](https://github.com/GorginZ/georgia-hello-world/workflows/github-actions-release.yaml/badge.svg?branch=main)
+
+![main](https://github.com/gorginz/georgia-hello-world/actions/workflows/github-actions-release.yaml/badge.svg?branch=main)
 
 registry: https://ghcr.io/gorginz/georgia-hello-world
 
