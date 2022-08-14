@@ -13,7 +13,7 @@ hash docker || die "docker not found"
 
 env=$1
 
-commit=$(git describe --tags --always)
+commit=$(git rev-parse --short HEAD)
 version=$(cat VERSION)
 description=$(cat envs/$env-description.txt)
 tag=${2:-$version}
