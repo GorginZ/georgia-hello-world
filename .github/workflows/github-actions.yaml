@@ -1,4 +1,4 @@
-name: georgia-hello-world-pipeline
+name: georgia-hello-world-lint-and-test
 on: [push]
 jobs:
   lint-test:

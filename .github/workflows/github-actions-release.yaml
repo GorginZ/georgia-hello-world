@@ -1,7 +1,5 @@
 name: georgia-hello-world-release
 on:
-  branches:
-    - main
   release:
     types: [published]
 jobs:
