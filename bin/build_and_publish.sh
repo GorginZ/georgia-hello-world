@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -ex
+set -euxo pipefail
 
 die() { echo "$1" >&2; exit "${2:-1}"; }
 
