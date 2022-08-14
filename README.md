@@ -38,7 +38,7 @@ run:
 ----------
 
 ## publish new release
-
+- update the VERSION
 - merge PR into main
 - tag main with release version:
 
