@@ -44,7 +44,7 @@ run:
 ----------
 
 ## publish new release
-- update the VERSION accordingly (v.major.minor.patch)
+- update the VERSION accordingly (major.minor.patch)
 - merge PR into main
 - tag main with release version:
 
