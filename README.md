@@ -1,6 +1,11 @@
 # GEORGIA-HELLO-WORLD
 
-## **required**: 
+main ![build](https://github.com/GorginZ/georgia-hello-world/workflows/github-actions-release.yaml/badge.svg?branch=main)
+
+registry: https://ghcr.io/gorginz/georgia-hello-world
+
+
+### **required**: 
 
 - [Go](https://golang.org/)
 - [Docker](https://www.docker.com/get-started/)
@@ -54,7 +59,7 @@ run:
 ## build and publish an image (non CI release)
 
 auth with ghcr registry. e.g with GITHUB_TOKEN:
->NOTE: this will require a georgia-can-I-have-a-gh-token-request ;)
+>NOTE: this will require a georgia-can-I-have-a-gh-token/deploy-keys-request ;) 
 
 ``` echo $GHCR_TOKEN | docker login ghcr.io -u <user-name> --password-stdin  ```
 
@@ -96,7 +101,7 @@ the top level routing behaviour is untested It could be nice to throw in some po
 - haven't included any scanning tools, could use sonarcube
 - no branch protection for main
 
-- currently gh actions is using a PAK (only scoped to packages - still bad though). This is not reccomended I will change this. Only realised today!
+- currently gh actions is using a PAK (only scoped to packages - still bad though). This is not reccomended I will migrate to deploy keys. [gh actions security](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#considering-cross-repository-access)
 
 ### assumptions
 
