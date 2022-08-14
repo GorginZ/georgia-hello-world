@@ -59,7 +59,7 @@ run:
 
 ## build and publish an image (non CI release)
 
-auth with ghcr registry. e.g with GITHUB_TOKEN:
+auth with ghcr registry. e.g with PAK token:
 >NOTE: this will require a georgia-can-I-have-a-gh-token/deploy-keys-request ;) 
 
 ``` echo $GHCR_TOKEN | docker login ghcr.io -u <user-name> --password-stdin  ```
@@ -78,14 +78,15 @@ Testing
 ```./bin/test.sh``` or ```go test -v ./...```
 
 
-Limitations
+## Limitations
 
-### CI
+### CI/Pipeline stuff
 
 I don't love how I read the description in the bin/build_and_publish.sh
 this is probably fine for a small project - but for something bigger and with more configuration it would be worth utilizing some templating tooling to read various env configurations across environments.  
 
-CI is very coupled with github actions. But I have tried to put most of the "work" in scripts because I think it's valuable to be able to easily run them locally. I thought of including another registry (ECR) for redundancy but it's not a requirement and I don't want to clog things up with extra yaml and scripts. 
+Everything is very coupled with github actions. But I have tried to put as much of the "work" in scripts as I can, because I think it's valuable to be able to easily run them locally. 
+I thought of including another registry (ECR) for redundancy but it's not a requirement and I don't want to clog things up with extra yaml and scripts. 
 
 ### the code
 I am not a go programmer, so while there are issues I am aware of there are likely many I am not.
@@ -93,16 +94,16 @@ I am not a go programmer, so while there are issues I am aware of there are like
 One thing I'm not enthusiastic about is I have included the [gorrila/mux](https://github.com/gorilla/mux) pkg because I wanted a quick way to enforce what methods are allowed at the 'top' routing level. I notice they are looking for a new maintainer and think it's generally best not to rely on external tools for simple things like this, and I'm not sure it gives me a lot, but this was faster for me because I'm not a go-wiz.
 
 ### testing
- I like to rely and feel confident in unit tests and have written some basic ones for the handlers. I did spend a little more time than I'd hoped wrestling with httptest because I haven't used it before.  
+ I like to rely and feel confident in unit tests and have written some basic ones for the handlers. I did spend a little more time than I'd hoped wrestling with httptest because I haven't used it before. The /status tests are a bit janky.  
 
-the top level routing behaviour is untested It could be nice to throw in some postman tests in a compose to run in CI
+The top level routing behaviour is untested It could be nice to throw in some postman tests in a compose to run in CI
 
 ### risks
 
-- haven't included any scanning tools, could use sonarcube
+- haven't included any scanning tools in the pipeline, could use something like sonarcube, similarly the same can be said regarding image security.
 - no branch protection for main
 
-- currently gh actions is using a PAK (only scoped to packages - still bad though). This is not reccomended I will migrate to deploy keys. [gh actions security](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#considering-cross-repository-access)
+- currently gh actions is using a PAK (*only* scoped to packages - still bad though). This is not reccomended I will migrate to deploy keys. I wasn't aware until I read this: [gh actions security](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#considering-cross-repository-access)
 
 ### assumptions
 
