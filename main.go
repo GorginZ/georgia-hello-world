@@ -1,84 +1,40 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/gorilla/mux"
+
+	metadata "github.com/GorginZ/georgia-hello-world/metadata"
+	"github.com/GorginZ/georgia-hello-world/routes"
 )
-
-var Version = "development"
-var Sha = "default"
-var Description = "default"
-
-type AppData struct {
-	Metadata Metadata `json:"my-application"`
-}
-
-type Metadata struct {
-	Version     string `json:"version"`
-	Description string `json:"description"`
-	Sha         string `json:"sha"`
-}
 
 func main() {
 	router()
 }
 
-func getVersion() string {
-	return Version
-}
-func getSha() string {
-	return Sha
-}
-func getDesc() string {
-	return Description
-}
-
 func router() {
-	// currently is returning root for all other paths
-	http.HandleFunc("/", handleRoot)
-	http.HandleFunc("/status", handleStatus)
+	r := mux.NewRouter().StrictSlash(true)
+	r.HandleFunc("/", routes.HandleRoot).Methods("GET")
+	r.HandleFunc("/status", routes.HandleStatus).Methods("GET")
 
 	listen_port, found := os.LookupEnv("HTTP_PORT")
 	if !found {
 		listen_port = "8001"
+		log.Printf("HTTP_PORT not found in env using default: %s", listen_port)
 	}
+
 	srv := &http.Server{
-		Addr: fmt.Sprintf(":%s", listen_port),
+		Addr:    fmt.Sprintf(":%s", listen_port),
+		Handler: r,
 	}
-	log.Printf("Version: %s", Version)
-	log.Printf("Sha: %s", Sha)
-	log.Printf("Description: %s", Description)
+	log.Printf("Version: %s", metadata.Version)
+	log.Printf("Sha: %s", metadata.Sha)
+	log.Printf("Description: %s", metadata.Description)
+	log.Printf("Listening on: %s", listen_port)
 
 	log.Fatal(srv.ListenAndServe())
-}
-
-func handleRoot(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	if r.Method != "GET" {
-		w.WriteHeader(405)
-		return
-	}
-	w.WriteHeader(200)
-	resp := make(map[string]string)
-	resp["message"] = "Hello World!"
-	json, err := json.Marshal(resp)
-	if err != nil {
-		log.Fatalf("JSON marshal Error. Err: %s", err)
-	}
-	w.Write(json)
-}
-
-func handleStatus(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	version := getVersion()
-	description := getDesc()
-	sha := getSha()
-
-	meta := Metadata{Version: version, Description: description, Sha: sha}
-	appData := AppData{Metadata: meta}
-	json.NewEncoder(w).Encode(appData)
-	w.WriteHeader(200)
 }

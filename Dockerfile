@@ -13,7 +13,7 @@ ARG version
 ARG sha
 ARG description
 
-RUN CGO_ENABLED=0 go build -v -o /_build/basic-app -ldflags "-X 'github.com/gorginz/georgia-hello-world/app-metadata/app-metadata.Version=${version}' -X 'github.com/gorginz/georgia-hello-world/app-metadata/app-metadata.Sha=${sha}' -X 'github.com/gorginz/georgia-hello-world/app-metadata/app-metadata.Description=${description}'"
+RUN CGO_ENABLED=0 go build -v -o /_build/basic-app -ldflags "-X 'github.com/GorginZ/georgia-hello-world/metadata.Version=${version}' -X 'github.com/GorginZ/georgia-hello-world/metadata.Sha=${sha}' -X 'github.com/GorginZ/georgia-hello-world/metadata.Description=${description}'"
 
 FROM scratch
 COPY --from=builder /_build/basic-app /app
