@@ -1,4 +1,4 @@
-package main
+package routes
 
 import (
 	"io/ioutil"
@@ -13,22 +13,22 @@ func Test_RootStatus(t *testing.T) {
 		request  *http.Request
 		w        httptest.ResponseRecorder
 	}{
-		"getRootShouldReturn200": {
+		"get-root-should-return-200": {
 			wantCode: 200,
 			request:  httptest.NewRequest("GET", "/", nil),
 			w:        *httptest.NewRecorder(),
 		},
-		"denyPOST": {
+		"should-deny-POST": {
 			wantCode: 405,
 			request:  httptest.NewRequest("POST", "/", nil),
 			w:        *httptest.NewRecorder(),
 		},
-		"denyDELETE": {
+		"should-deny-DELETE": {
 			wantCode: 405,
 			request:  httptest.NewRequest("DELETE", "/", nil),
 			w:        *httptest.NewRecorder(),
 		},
-		"denyPUT": {
+		"should-deny-PUT": {
 			wantCode: 405,
 			request:  httptest.NewRequest("PUT", "/", nil),
 			w:        *httptest.NewRecorder(),
@@ -36,7 +36,7 @@ func Test_RootStatus(t *testing.T) {
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			handleRoot(&tt.w, tt.request)
+			HandleRoot(&tt.w, tt.request)
 			response := tt.w.Result()
 			if response.StatusCode != tt.wantCode {
 				t.Errorf("got %v, want %v", response.Status, tt.wantCode)
@@ -47,22 +47,22 @@ func Test_RootStatus(t *testing.T) {
 
 func Test_RootBody(t *testing.T) {
 	tests := map[string]struct {
-		wantStatus string
-		wantBody   string
-		request    *http.Request
-		w          httptest.ResponseRecorder
+		wantBody string
+		request  *http.Request
+		w        httptest.ResponseRecorder
 	}{
-		"happyHitRoot": {
-			request:  httptest.NewRequest("GET", "/", nil),
+		"happy-hit-root-should-be-valid-json": {
 			wantBody: `{"message":"Hello World!"}`,
+			request:  httptest.NewRequest("GET", "/", nil),
 			w:        *httptest.NewRecorder(),
 		},
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			handleRoot(&tt.w, tt.request)
+			HandleRoot(&tt.w, tt.request)
 			response := tt.w.Result()
 			response.Body.Close()
+
 			body, err := ioutil.ReadAll(response.Body)
 			if err != nil {
 				t.Errorf(err.Error())
@@ -70,7 +70,6 @@ func Test_RootBody(t *testing.T) {
 			if string(body) != string(tt.wantBody) {
 				t.Errorf("got %q, want %q", string(body), tt.wantBody)
 			}
-
 		})
 	}
 }

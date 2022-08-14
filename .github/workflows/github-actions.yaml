@@ -1,10 +1,9 @@
 name: georgia-hello-world-pipeline
 on: [push]
 jobs:
-  validate-lint-test-and-build:
+  lint-test:
     runs-on: ubuntu-latest
     steps:
-    # TODOthese can run concurrently
     - name: Checkout
       uses: actions/checkout@v2
 
@@ -16,12 +15,8 @@ jobs:
       run: |
         ./bin/test.sh
 
-    - name: validate_build
-      run: |
-        ./bin/test_build.sh
-
   build-and-publish:
-    needs: [validate-lint-test-and-build]
+    needs: [lint-test]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
@@ -37,4 +32,4 @@ jobs:
 
     - name: build_and_publish
       run: |
-        ./bin/build_and_publish.sh
+        ./bin/build_and_publish.sh dev

@@ -7,12 +7,15 @@ COPY . /go/src/github.com/GorginZ/basic-app
 
 RUN go mod download
 RUN go mod tidy
-
 ENV CGO_ENABLED=0
-RUN go test ./... -v
 
-RUN CGO_ENABLED=0 go build -o /_build/basic-app
+ARG version
+ARG sha
+ARG description
+
+RUN CGO_ENABLED=0 go build -v -o /_build/basic-app -ldflags "-X 'github.com/GorginZ/georgia-hello-world/metadata.Version=${version}' -X 'github.com/GorginZ/georgia-hello-world/metadata.Sha=${sha}' -X 'github.com/GorginZ/georgia-hello-world/metadata.Description=${description}'"
 
 FROM scratch
 COPY --from=builder /_build/basic-app /app
+
 ENTRYPOINT ["/app"]

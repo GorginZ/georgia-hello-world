@@ -1,11 +1,15 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/gorilla/mux"
+
+	metadata "github.com/GorginZ/georgia-hello-world/metadata"
+	"github.com/GorginZ/georgia-hello-world/routes"
 )
 
 func main() {
@@ -13,31 +17,24 @@ func main() {
 }
 
 func router() {
-	// currently is returning root for all other paths
-	http.HandleFunc("/", handleRoot)
+	r := mux.NewRouter().StrictSlash(true)
+	r.HandleFunc("/", routes.HandleRoot).Methods("GET")
+	r.HandleFunc("/status", routes.HandleStatus).Methods("GET")
 
 	listen_port, found := os.LookupEnv("HTTP_PORT")
 	if !found {
 		listen_port = "8001"
+		log.Printf("HTTP_PORT not found in env using default: %s", listen_port)
 	}
-	srv := &http.Server{
-		Addr: fmt.Sprintf(":%s", listen_port),
-	}
-	log.Fatal(srv.ListenAndServe())
-}
 
-func handleRoot(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	if r.Method != "GET" {
-		w.WriteHeader(405)
-		return
+	srv := &http.Server{
+		Addr:    fmt.Sprintf(":%s", listen_port),
+		Handler: r,
 	}
-	w.WriteHeader(200)
-	resp := make(map[string]string)
-	resp["message"] = "Hello World!"
-	json, err := json.Marshal(resp)
-	if err != nil {
-		log.Fatalf("JSON marshal Error. Err: %s", err)
-	}
-	w.Write(json)
+	log.Printf("Version: %s", metadata.Version)
+	log.Printf("Sha: %s", metadata.Sha)
+	log.Printf("Description: %s", metadata.Description)
+	log.Printf("Listening on: %s", listen_port)
+
+	log.Fatal(srv.ListenAndServe())
 }
