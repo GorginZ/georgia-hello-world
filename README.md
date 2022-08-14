@@ -102,7 +102,7 @@ The top level routing behaviour is untested It could be nice to throw in some po
 ### risks
 
 - haven't included any code scanning tools in the pipeline, could use something like sonarcube, similarly the same can be said regarding image security.
-- no branch protection for main
+- no branch protection for main are enforced "Your protected branch rules for your main branch won't be enforced on this private repository until you move to a GitHub Team or Enterprise organization account"
 
 - currently gh actions is using a PAK (*only* scoped to packages - still bad though). This is very, very, very not reccomended! I will migrate to deploy keys. I wasn't aware until I read this: [gh actions security](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#considering-cross-repository-access)
 
