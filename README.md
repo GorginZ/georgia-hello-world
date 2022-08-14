@@ -1,6 +1,12 @@
 # GEORGIA-HELLO-WORLD
 
-## **required**: 
+
+![main](https://github.com/gorginz/georgia-hello-world/actions/workflows/github-actions-release.yaml/badge.svg?branch=main)
+
+registry: https://ghcr.io/gorginz/georgia-hello-world
+
+
+### **required**: 
 
 - [Go](https://golang.org/)
 - [Docker](https://www.docker.com/get-started/)
@@ -33,12 +39,12 @@ can ommit build args if testing locally
 run:
 
 
-```docker run --rm -p 80:8001 georgia-hello-world```
+```docker run --rm -p 80:8001 -e HTTP_PORT=8001 georgia-hello-world```
 
 ----------
 
 ## publish new release
-
+- update the VERSION accordingly (major.minor.patch)
 - merge PR into main
 - tag main with release version:
 
@@ -47,12 +53,14 @@ run:
 
 ```git push origin vx.x.x```
 
-- create a release in github UI and select latest tag -> pipeline will run the build and release
+- create a release. Can do this in github UI.
+- select latest tag -> pipeline will build and push image to ghcr
 
 
-## build and publish an image for testing (non CI release)
+## build and publish an image (non CI release)
 
-auth with ghcr registry. e.g with PAK:
+auth with ghcr registry. e.g with PAK token:
+>NOTE: this will require a georgia-can-I-have-a-gh-token/deploy-keys-request ;) 
 
 ``` echo $GHCR_TOKEN | docker login ghcr.io -u <user-name> --password-stdin  ```
 
@@ -70,34 +78,33 @@ Testing
 ```./bin/test.sh``` or ```go test -v ./...```
 
 
-Limitations
+## Limitations
 
-### CI
+### CI/Pipeline stuff
 
-the build pipeline will run test and linting steps on every branch, this is good to validate work in process. The build and publish steps however run on *every merge to main* - which might be fine, but if there are changes to the README.md or minor changes to improve the code that doesn't mean a patch is required it's a waste.  
-
-perhaps I could use tags on releases and differentiate on this basis.
-
-I don't like how I read the description in the bin/build_and_publish.sh
+I don't love how I read the description in the bin/build_and_publish.sh
 this is probably fine for a small project - but for something bigger and with more configuration it would be worth utilizing some templating tooling to read various env configurations across environments.  
 
-CI is very coupled with github actions. I have tried to put most of the "work" in scripts because I think it's nice to be able to run them locally. 
+Everything is very coupled with github actions. But I have tried to put as much of the "work" in scripts as I can, because I think it's valuable to be able to easily run them locally. 
+I thought of including another registry (ECR) for redundancy but it's not a requirement and I don't want to clog things up with extra yaml and scripts. 
 
 ### the code
 I am not a go programmer, so while there are issues I am aware of there are likely many I am not.
 
-error handling is not ideal.
-
-One thing I'm not enthusiastic about is I have included the [gorrila/mux](https://github.com/gorilla/mux) pkg because I wanted a quick way to enforce what methods are allowed at the 'top' routing level. I notice they are looking for a new maintainer and think it's generally best not to rely on external tools for simple things like this, and I'm not sure it gives me a lot, but this was faster for me because I'm not a go-wiz.
+One thing I'm not enthusiastic about is I have included the [gorrila/mux](https://github.com/gorilla/mux) pkg because I wanted a quick way to enforce which methods are allowed at the 'top' routing level. I notice they are looking for a new maintainer and think it's generally best not to rely on external tools for simple things like this, and I'm not sure it gives me a lot, but this was faster for me because I'm not a go-wiz.
 
 ### testing
- I like to rely and feel confident in unit tests and have written some basic ones for the handlers. I did spend a little time wrestling with httptest because I haven't used it before.  
+ I like to rely and have confidence in unit tests. I have written some basic tests for the handlers. I did spend a little more time than I'd hoped wrestling with ```httptest.recorder``` and some unexpected 200s. In particular the /status tests are a bit janky because the json encoder appends a newline but my string literal in the test's newline is being escaped.  
+ I used a struct for representing the metadata because the original map was not in the order I wanted - my tests alerted me to this, so they've paid themselves off somewhat. 
 
-the top level routing behaviour is untested It could be nice to throw in some postman tests in a compose to run in CI
+The top level routing behaviour is untested It could be nice to throw in some postman tests in a compose to run in CI
 
-### documentation
+### risks
 
-becaues this is a go app I could utilize the godoc to extract documentation
+- haven't included any code scanning tools in the pipeline, could use something like sonarcube, similarly the same can be said regarding image security.
+- no branch protection for main
+
+- currently gh actions is using a PAK (*only* scoped to packages - still bad though). This is very, very, very not reccomended! I will migrate to deploy keys. I wasn't aware until I read this: [gh actions security](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#considering-cross-repository-access)
 
 ### assumptions
 
