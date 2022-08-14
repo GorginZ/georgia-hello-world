@@ -12,13 +12,14 @@ func HandleRoot(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(405)
 		return
 	}
-	w.WriteHeader(200)
 	resp := make(map[string]string)
 	resp["message"] = "Hello World!"
 	json, err := json.Marshal(resp)
 	if err != nil {
-		//I don't want it to die
-		log.Fatalf("JSON marshal Error. Err: %s", err)
+		log.Printf("JSON marshal Error: %s", err)
+		w.WriteHeader(500)
+		return
 	}
+	w.WriteHeader(200)
 	w.Write(json)
 }

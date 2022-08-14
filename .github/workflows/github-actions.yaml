@@ -1,5 +1,5 @@
 name: georgia-hello-world-pipeline
-on: [push]
+on: [push, release]
 jobs:
   lint-test:
     runs-on: ubuntu-latest
@@ -17,7 +17,9 @@ jobs:
 
   build-and-publish:
     needs: [lint-test]
-    if: github.ref == 'refs/heads/main'
+    if: |
+      github.ref == 'refs/heads/main' && 
+      startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
