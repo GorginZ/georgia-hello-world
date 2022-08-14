@@ -47,12 +47,14 @@ run:
 
 ```git push origin vx.x.x```
 
-- create a release in github UI and select latest tag -> pipeline will run the build and release
+- create a release. Can do this in github UI.
+- select latest tag -> pipeline will build and push image to ghcr
 
 
-## build and publish an image for testing (non CI release)
+## build and publish an image (non CI release)
 
-auth with ghcr registry. e.g with PAK:
+auth with ghcr registry. e.g with GITHUB_TOKEN:
+>NOTE: this will require a georgia-can-I-have-a-gh-token-request ;)
 
 ``` echo $GHCR_TOKEN | docker login ghcr.io -u <user-name> --password-stdin  ```
 
@@ -93,6 +95,7 @@ the top level routing behaviour is untested It could be nice to throw in some po
 
 - haven't included any scanning tools, could use sonarcube
 - no branch protection for main
+- currently gh actions is using a PAK. This is not reccomended I will change this.
 
 ### assumptions
 
