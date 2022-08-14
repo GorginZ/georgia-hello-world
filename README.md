@@ -91,10 +91,10 @@ I thought of including another registry (ECR) for redundancy but it's not a requ
 ### the code
 I am not a go programmer, so while there are issues I am aware of there are likely many I am not.
 
-One thing I'm not enthusiastic about is I have included the [gorrila/mux](https://github.com/gorilla/mux) pkg because I wanted a quick way to enforce what methods are allowed at the 'top' routing level. I notice they are looking for a new maintainer and think it's generally best not to rely on external tools for simple things like this, and I'm not sure it gives me a lot, but this was faster for me because I'm not a go-wiz.
+One thing I'm not enthusiastic about is I have included the [gorrila/mux](https://github.com/gorilla/mux) pkg because I wanted a quick way to enforce which methods are allowed at the 'top' routing level. I notice they are looking for a new maintainer and think it's generally best not to rely on external tools for simple things like this, and I'm not sure it gives me a lot, but this was faster for me because I'm not a go-wiz.
 
 ### testing
- I like to rely and feel confident in unit tests and have written some basic ones for the handlers. I did spend a little more time than I'd hoped wrestling with ```httptest.recorder``` and some unexpected 200s. In particular the /status tests are a bit janky because the json encoder appends a newline but my string literal in the test's newline is being escaped.  
+ I like to rely and have confidence in unit tests. I have written some basic tests for the handlers. I did spend a little more time than I'd hoped wrestling with ```httptest.recorder``` and some unexpected 200s. In particular the /status tests are a bit janky because the json encoder appends a newline but my string literal in the test's newline is being escaped.  
  I used a struct for representing the metadata because the original map was not in the order I wanted - my tests alerted me to this, so they've paid themselves off somewhat. 
 
 The top level routing behaviour is untested It could be nice to throw in some postman tests in a compose to run in CI
