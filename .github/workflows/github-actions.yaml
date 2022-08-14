@@ -1,5 +1,5 @@
 name: georgia-hello-world-pipeline
-on: [push]
+on: [push, release]
 jobs:
   lint-test:
     runs-on: ubuntu-latest

@@ -15,7 +15,6 @@ a simple hello world message
 
 returns ```{"message":"Hello World!"}``` response 
 
----------
 
 #### /status
 Methods: GET
@@ -24,12 +23,12 @@ metadata about the running application. This is "baked in" at build.
 
 returns ```{"my-application":{"version":"1.0.0","description":"basic hello-world app in development environment","sha":"a0ce191"}}``` 
 
-
+-------
 ### build and run locally
 
 can ommit build args if testing locally
 
-```docker build --build-arg version=<version> --build-arg sha="<commit> --build-arg description=<description> -t georgia-hello-world:<test-tag>  .```
+```docker build --build-arg version=<version> --build-arg sha=<commit> --build-arg description=<description> -t georgia-hello-world:<test-tag>  .```
 
 run:
 
@@ -37,6 +36,19 @@ run:
 ```docker run --rm -p 80:8001 georgia-hello-world```
 
 ----------
+
+## publish new release
+
+- merge PR into main
+- tag main with release version:
+
+```git tag vx.x.x```
+- push tag:
+
+```git push origin vx.x.x```
+
+- create a release in github UI and select latest tag -> pipeline will run the build and release
+
 
 ## build and publish an image for testing (non CI release)
 
