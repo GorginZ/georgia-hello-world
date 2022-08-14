@@ -95,7 +95,8 @@ the top level routing behaviour is untested It could be nice to throw in some po
 
 - haven't included any scanning tools, could use sonarcube
 - no branch protection for main
-- currently gh actions is using a PAK. This is not reccomended I will change this.
+
+- currently gh actions is using a PAK (only scoped to packages - still bad though). This is not reccomended I will change this. Only realised today!
 
 ### assumptions
 
